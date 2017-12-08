@@ -59,7 +59,6 @@ RUN R --slave --no-restore \
 
 # Entry point
 WORKDIR /home/dataiku
-USER dataiku
 
 COPY run.sh /home/dataiku/
 
