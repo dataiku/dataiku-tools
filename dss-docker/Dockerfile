@@ -1,6 +1,6 @@
 FROM debian:9
 
-ENV DSS_VERSION="4.1.0" \
+ENV DSS_VERSION="4.1.2" \
     DSS_DATADIR="/home/dataiku/dss" \
     DSS_PORT=10000
 
@@ -12,8 +12,7 @@ RUN useradd -s /bin/bash dataiku \
 # System dependencies
 # TODO - much could be removed by building externally the required R packages
 RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get upgrade -y \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         locales \
         acl \
         curl \
@@ -42,7 +41,7 @@ RUN apt-get update \
 RUN DSSKIT="dataiku-dss-$DSS_VERSION" \
     && cd /home/dataiku \
     && echo "+ Downloading kit" \
-    && curl -OsS "http://downloads.dataiku.com/public/studio/$DSS_VERSION/$DSSKIT.tar.gz" \
+    && curl -OsS "https://downloads.dataiku.com/public/studio/$DSS_VERSION/$DSSKIT.tar.gz" \
     && echo "+ Extracting kit" \
     && tar xf "$DSSKIT.tar.gz" \
     && rm "$DSSKIT.tar.gz" \
@@ -55,7 +54,7 @@ RUN DSSKIT="dataiku-dss-$DSS_VERSION" \
 RUN R --slave --no-restore \
     -e "install.packages(c('httr', 'RJSONIO', 'dplyr', 'IRkernel', 'sparklyr', 'ggplot2', 'tidyr', 'rmarkdown'), \
                         repos=c('file:///home/dataiku/dataiku-dss-$DSS_VERSION/dku-jupyter/R', \
-                                'http://cloud.r-project.org'))"
+                                'https://cloud.r-project.org'))"
 
 # Entry point
 WORKDIR /home/dataiku
