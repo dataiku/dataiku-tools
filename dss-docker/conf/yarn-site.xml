@@ -1,0 +1,115 @@
+<?xml version="1.0" ?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. See accompanying LICENSE file.
+-->
+<configuration>
+  <!-- Site specific YARN configuration properties -->
+  <property>
+    <name>yarn.nodemanager.remote-app-log-dir</name>
+    <value>/yarn-logs/</value>
+    <description>
+      The remote path, on the default FS, to store logs.
+    </description>
+  </property>
+  <property>
+    <name>yarn.nodemanager.aux-services</name>
+    <value>mapreduce_shuffle,spark_shuffle</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.nodes.exclude-path</name>
+    <value>/etc/hadoop/conf/nodes_exclude</value>
+  </property>
+  <property>
+    <name>yarn.nodemanager.local-dirs</name>
+    <value>/hadoop/yarn/nm-local-dir</value>
+    <description>
+      Directories on the local machine in which to application temp files.
+    </description>
+  </property>
+  <property>
+    <name>yarn.nodemanager.aux-services.spark_shuffle.class</name>
+    <value>org.apache.spark.network.yarn.YarnShuffleService</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.hostname</name>
+    <value>crs-dataiku-hadoop2-m</value>
+  </property>
+  <property>
+    <name>yarn.nodemanager.vmem-check-enabled</name>
+    <value>false</value>
+  </property>
+  <property>
+    <description>
+      The maximum allocation for every container request at the RM,       in
+      terms of virtual CPU cores. Requests higher than this won't take
+      effect, and will get capped to this value.
+    </description>
+    <name>yarn.scheduler.maximum-allocation-vcores</name>
+    <value>32000</value>
+  </property>
+  <property>
+    <name>yarn.nodemanager.resource.memory-mb</name>
+    <value>24576</value>
+    <source>Dataproc Cluster Properties</source>
+  </property>
+  <property>
+    <name>yarn.scheduler.minimum-allocation-mb</name>
+    <value>1024</value>
+    <source>Dataproc Cluster Properties</source>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.nodes.include-path</name>
+    <value>/etc/hadoop/conf/nodes_include</value>
+  </property>
+  <property>
+    <name>yarn.nodemanager.resource.cpu-vcores</name>
+    <value>4</value>
+    <description>
+      Number of vcores that can be allocated for containers. This is used by
+      the RM scheduler when allocating resources for containers. This is not
+      used to limit the number of physical cores used by YARN containers.
+    </description>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.fs.state-store.uri</name>
+    <value>file:///hadoop/yarn/system/rmstore</value>
+    <description>
+      URI pointing to the location of the FileSystem path where RM state will
+      be stored. This is set on the local file system to avoid collisions in
+      GCS.
+    </description>
+  </property>
+  <property>
+    <name>yarn.scheduler.maximum-allocation-mb</name>
+    <value>24576</value>
+    <source>Dataproc Cluster Properties</source>
+  </property>
+  <property>
+    <name>yarn.application.classpath</name>
+    <value>$HADOOP_CONF_DIR,
+      $HADOOP_COMMON_HOME/*,$HADOOP_COMMON_HOME/lib/*,
+      $HADOOP_HDFS_HOME/*,$HADOOP_HDFS_HOME/lib/*,
+      $HADOOP_MAPRED_HOME/*,$HADOOP_MAPRED_HOME/lib/*,
+      $HADOOP_YARN_HOME/*,$HADOOP_YARN_HOME/lib/*'</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.recovery.enabled</name>
+    <value>true</value>
+    <description>Enable RM to recover state after starting.</description>
+  </property>
+  <property>
+    <name>yarn.log-aggregation-enable</name>
+    <value>false</value>
+    <description>Enable remote logs aggregation to the default FS.</description>
+  </property>
+</configuration>

@@ -1,0 +1,9 @@
+#!/bin/bash -e
+
+export SPARK_HOME=/home/dataiku/spark-2.2.0-bin-hadoop2.7
+export HADOOP_CONF_DIR=/home/dataiku/hadoop-2.8.3/conf
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64/jre
+export PATH=$PATH:/var/dataiku/data/pyenv/bin:/home/dataiku/dss/pyenv/bin
+export SPARK_LOCAL_HOSTNAME=127.0.0.1
+
+"$SPARK_HOME"/bin/spark-submit "$@"
