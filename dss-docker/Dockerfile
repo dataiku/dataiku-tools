@@ -13,6 +13,7 @@ RUN useradd -s /bin/bash dataiku \
 # TODO - much could be removed by building externally the required R packages
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        procps \
         locales \
         acl \
         curl \
