@@ -46,8 +46,8 @@ RUN DSSKIT="dataiku-dss-$DSS_VERSION" \
     && tar xf "$DSSKIT.tar.gz" \
     && rm "$DSSKIT.tar.gz" \
     && echo "+ Compiling Python code" \
-    && python2.7 -O -m compileall -q "$DSSKIT"/python "$DSSKIT"/dku-jupyter \
-    && { python2.7 -O -m compileall -q "$DSSKIT"/python.packages >/dev/null || true; } \
+    && python2.7 -m compileall -q "$DSSKIT"/python "$DSSKIT"/dku-jupyter \
+    && { python2.7 -m compileall -q "$DSSKIT"/python.packages >/dev/null || true; } \
     && chown -Rh dataiku:dataiku "$DSSKIT"
 
 # Install required R packages
