@@ -1,6 +1,6 @@
 FROM debian:9
 
-ENV DSS_VERSION="4.1.2" \
+ENV DSS_VERSION="4.1.5" \
     DSS_DATADIR="/home/dataiku/dss" \
     DSS_PORT=10000
 
@@ -14,6 +14,7 @@ RUN useradd -s /bin/bash dataiku \
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         locales \
+        procps \
         acl \
         curl \
         git \
