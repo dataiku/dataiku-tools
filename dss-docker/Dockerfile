@@ -24,6 +24,7 @@ RUN apt-get update \
         zip \
         default-jre-headless \
         python2.7 \
+        python2.7-dev \
         libpython2.7 \
         libfreetype6 \
         libgfortran3 \
