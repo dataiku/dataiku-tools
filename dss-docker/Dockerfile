@@ -1,6 +1,6 @@
 FROM debian:9
 
-ENV DSS_VERSION="4.1.5" \
+ENV DSS_VERSION="4.2.1" \
     DSS_DATADIR="/home/dataiku/dss" \
     DSS_PORT=10000
 
@@ -19,12 +19,11 @@ RUN apt-get update \
         curl \
         git \
         libexpat1 \
-        nginx-full \
+        nginx \
         unzip \
         zip \
         default-jre-headless \
         python2.7 \
-        python2.7-dev \
         libpython2.7 \
         libfreetype6 \
         libgfortran3 \
@@ -36,6 +35,7 @@ RUN apt-get update \
         libxml2-dev \
         libzmq3-dev \
         pkg-config \
+        python2.7-dev \
     && rm -rf /var/lib/apt/lists/* \
     && localedef -f UTF-8 -i en_US en_US.UTF-8
 
@@ -54,7 +54,7 @@ RUN DSSKIT="dataiku-dss-$DSS_VERSION" \
 
 # Install required R packages
 RUN R --slave --no-restore \
-    -e "install.packages(c('httr', 'RJSONIO', 'dplyr', 'IRkernel', 'sparklyr', 'ggplot2', 'tidyr', 'rmarkdown'), \
+    -e "install.packages(c('httr', 'RJSONIO', 'dplyr', 'IRkernel', 'sparklyr', 'ggplot2', 'gtools', 'tidyr', 'rmarkdown'), \
                         repos=c('file:///home/dataiku/dataiku-dss-$DSS_VERSION/dku-jupyter/R', \
                                 'https://cloud.r-project.org'))"
 
