@@ -1,6 +1,6 @@
 FROM debian:9
 
-ENV DSS_VERSION="4.2.1" \
+ENV DSS_VERSION="4.2.2" \
     DSS_DATADIR="/home/dataiku/dss" \
     DSS_PORT=10000
 
@@ -13,6 +13,7 @@ RUN useradd -s /bin/bash dataiku \
 # TODO - much could be removed by building externally the required R packages
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        file \
         locales \
         procps \
         acl \
@@ -29,6 +30,7 @@ RUN apt-get update \
         libgfortran3 \
         libgomp1 \
         r-base-dev \
+        r-recommended \
         libicu-dev \
         libcurl4-openssl-dev \
         libssl-dev \
