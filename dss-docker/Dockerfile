@@ -1,6 +1,6 @@
 FROM debian:9
 
-ENV DSS_VERSION="4.2.2" \
+ENV DSS_VERSION="5.1.5" \
     DSS_DATADIR="/home/dataiku/dss" \
     DSS_PORT=10000
 
@@ -38,6 +38,7 @@ RUN apt-get update \
         libzmq3-dev \
         pkg-config \
         python2.7-dev \
+        python3.5-dev \
     && rm -rf /var/lib/apt/lists/* \
     && localedef -f UTF-8 -i en_US en_US.UTF-8
 
@@ -45,7 +46,7 @@ RUN apt-get update \
 RUN DSSKIT="dataiku-dss-$DSS_VERSION" \
     && cd /home/dataiku \
     && echo "+ Downloading kit" \
-    && curl -OsS "https://downloads.dataiku.com/public/studio/$DSS_VERSION/$DSSKIT.tar.gz" \
+    && curl -OsS "https://cdn.downloads.dataiku.com/public/studio/$DSS_VERSION/$DSSKIT.tar.gz" \
     && echo "+ Extracting kit" \
     && tar xf "$DSSKIT.tar.gz" \
     && rm "$DSSKIT.tar.gz" \
@@ -56,7 +57,7 @@ RUN DSSKIT="dataiku-dss-$DSS_VERSION" \
 
 # Install required R packages
 RUN R --slave --no-restore \
-    -e "install.packages(c('httr', 'RJSONIO', 'dplyr', 'IRkernel', 'sparklyr', 'ggplot2', 'gtools', 'tidyr', 'rmarkdown'), \
+    -e "install.packages(c('httr', 'RJSONIO', 'dplyr', 'curl', 'IRkernel', 'sparklyr', 'ggplot2', 'gtools', 'tidyr', 'rmarkdown', 'base64enc'), \
                         repos=c('file:///home/dataiku/dataiku-dss-$DSS_VERSION/dku-jupyter/R', \
                                 'https://cloud.r-project.org'))"
 
