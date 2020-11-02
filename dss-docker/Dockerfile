@@ -16,7 +16,6 @@ RUN yum install -y \
         epel-release \
     && yum install -y \
         file \
-        zeromq-devel \
         acl \
         expat \
         git \
@@ -52,7 +51,8 @@ RUN DSSKIT="dataiku-dss-$DSS_VERSION" \
 RUN mkdir -p /usr/local/lib/R/site-library \
     && R --slave --no-restore \
         -e "install.packages( \
-            c('httr', 'RJSONIO', 'dplyr', 'curl', 'IRkernel', 'sparklyr', 'ggplot2', 'gtools', 'tidyr', 'rmarkdown', 'base64enc'), \
+            c('httr', 'RJSONIO', 'dplyr', 'curl', 'IRkernel', 'sparklyr', 'ggplot2', 'gtools', 'tidyr', \
+            'rmarkdown', 'base64enc', 'filelock'), \
             '/usr/local/lib/R/site-library', \
             repos='https://cloud.r-project.org')"
 
