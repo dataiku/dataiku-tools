@@ -58,7 +58,6 @@ RUN mkdir -p /usr/local/lib/R/site-library \
 
 # Entry point
 WORKDIR /home/dataiku
-USER dataiku
 
 COPY run.sh /home/dataiku/
 
