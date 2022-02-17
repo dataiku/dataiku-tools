@@ -1,4 +1,4 @@
-FROM centos:7
+FROM almalinux:8
 
 ARG dssVersion
 
@@ -15,6 +15,7 @@ RUN useradd dataiku \
 RUN yum install -y \
         epel-release \
     && yum install -y \
+        glibc-langpack-en \
         file \
         acl \
         expat \
@@ -22,19 +23,30 @@ RUN yum install -y \
         nginx \
         unzip \
         zip \
+        ncurses-compat-libs \
         java-1.8.0-openjdk \
-        python3 \
+        python2 \
+        python36 \
         freetype \
         libgfortran \
         libgomp \
-        R-core-devel \
         libicu-devel \
         libcurl-devel \
         openssl-devel \
         libxml2-devel \
-        python-devel \
-        python3-devel \
+        npm \
+        gtk3 \
+        libXScrnSaver \
+        alsa-lib \
+        libX11-xcb \
+        python2-devel \
+        python36-devel \
     && yum clean all
+
+# Build R 3.6 from source
+COPY build-r36.sh /tmp/
+RUN /tmp/build-r36.sh \
+    && rm -f /tmp/build-r36.sh
 
 # Download and extract DSS kit
 RUN DSSKIT="dataiku-dss-$DSS_VERSION" \
@@ -45,15 +57,16 @@ RUN DSSKIT="dataiku-dss-$DSS_VERSION" \
     && tar xf "$DSSKIT.tar.gz" \
     && rm "$DSSKIT.tar.gz" \
     && "$DSSKIT"/scripts/install/installdir-postinstall.sh "$DSSKIT" \
+    && (cd "$DSSKIT"/resources/graphics-export && npm install puppeteer@1.20.0 fs) \
     && chown -Rh dataiku:dataiku "$DSSKIT"
 
 # Install required R packages
-RUN mkdir -p /usr/local/lib/R/site-library \
+RUN mkdir -p /usr/local/lib64/R/site-library \
     && R --slave --no-restore \
         -e "install.packages( \
             c('httr', 'RJSONIO', 'dplyr', 'curl', 'IRkernel', 'sparklyr', 'ggplot2', 'gtools', 'tidyr', \
             'rmarkdown', 'base64enc', 'filelock'), \
-            '/usr/local/lib/R/site-library', \
+            '/usr/local/lib64/R/site-library', \
             repos='https://cloud.r-project.org')"
 
 # Entry point
