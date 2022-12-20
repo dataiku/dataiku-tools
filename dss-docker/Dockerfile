@@ -14,7 +14,7 @@ RUN useradd dataiku \
 # System dependencies
 RUN yum install -y \
         epel-release \
-    && yum install -y \
+    && yum install -y --enablerepo=powertools \
         glibc-langpack-en \
         file \
         acl \
@@ -30,6 +30,7 @@ RUN yum install -y \
         freetype \
         libgfortran \
         libgomp \
+        R-core-devel \
         libicu-devel \
         libcurl-devel \
         openssl-devel \
@@ -38,15 +39,12 @@ RUN yum install -y \
         gtk3 \
         libXScrnSaver \
         alsa-lib \
+        nss \
+        mesa-libgbm \
         libX11-xcb \
         python2-devel \
         python36-devel \
     && yum clean all
-
-# Build R 3.6 from source
-COPY build-r36.sh /tmp/
-RUN /tmp/build-r36.sh \
-    && rm -f /tmp/build-r36.sh
 
 # Download and extract DSS kit
 RUN DSSKIT="dataiku-dss-$DSS_VERSION" \
@@ -57,16 +55,16 @@ RUN DSSKIT="dataiku-dss-$DSS_VERSION" \
     && tar xf "$DSSKIT.tar.gz" \
     && rm "$DSSKIT.tar.gz" \
     && "$DSSKIT"/scripts/install/installdir-postinstall.sh "$DSSKIT" \
-    && (cd "$DSSKIT"/resources/graphics-export && npm install puppeteer@1.20.0 fs) \
+    && (cd "$DSSKIT"/resources/graphics-export && npm install puppeteer@13.7.0 fs) \
     && chown -Rh dataiku:dataiku "$DSSKIT"
 
 # Install required R packages
-RUN mkdir -p /usr/local/lib64/R/site-library \
+RUN mkdir -p /usr/local/lib/R/site-library \
     && R --slave --no-restore \
         -e "install.packages( \
             c('httr', 'RJSONIO', 'dplyr', 'curl', 'IRkernel', 'sparklyr', 'ggplot2', 'gtools', 'tidyr', \
             'rmarkdown', 'base64enc', 'filelock'), \
-            '/usr/local/lib64/R/site-library', \
+            '/usr/local/lib/R/site-library', \
             repos='https://cloud.r-project.org')"
 
 # Entry point

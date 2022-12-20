@@ -5,4 +5,4 @@ This directory contains the Dockerfile which is used by Dataiku to build the sta
 To rebuild, run:
     docker build --build-arg dssVersion=DSS_VERSION .
 
-where DSS_VERSION is the DSS version to use, e.g. "6.0.0".
+where DSS_VERSION is the DSS version to use, e.g. "11.2.0".
