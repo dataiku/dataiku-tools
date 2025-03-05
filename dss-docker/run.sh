@@ -12,6 +12,7 @@ if [ ! -f "$DSS_DATADIR"/bin/env-default.sh ]; then
 
 elif [ $(bash -c 'source "$DSS_DATADIR"/bin/env-default.sh && echo "$DKUINSTALLDIR"') != "$DSS_INSTALLDIR" ]; then
 	# Upgrade existing data directory
+	rm -rf "$DSS_DATADIR"/pyenv
 	"$DSS_INSTALLDIR"/installer.sh -d "$DSS_DATADIR" -u -y
 	"$DSS_DATADIR"/bin/dssadmin install-R-integration
 	"$DSS_DATADIR"/bin/dssadmin install-graphics-export

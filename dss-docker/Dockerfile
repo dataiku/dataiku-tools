@@ -12,9 +12,10 @@ RUN useradd dataiku \
     && chown -Rh dataiku:dataiku /home/dataiku ${DSS_DATADIR}
 
 # System dependencies
-RUN yum install -y \
-        epel-release \
-    && yum install -y --enablerepo=powertools \
+RUN dnf -y install epel-release \
+    && dnf -y update \
+    && dnf -y module switch-to nodejs:20 \
+    && dnf -y install --enablerepo=powertools \
         glibc-langpack-en \
         file \
         acl \
@@ -24,9 +25,8 @@ RUN yum install -y \
         unzip \
         zip \
         ncurses-compat-libs \
-        java-1.8.0-openjdk \
-        python2 \
-        python36 \
+        java-17-openjdk-headless \
+        python39 \
         freetype \
         libgfortran \
         libgomp \
@@ -42,21 +42,8 @@ RUN yum install -y \
         nss \
         mesa-libgbm \
         libX11-xcb \
-        python2-devel \
-        python36-devel \
-    && yum clean all
-
-# Download and extract DSS kit
-RUN DSSKIT="dataiku-dss-$DSS_VERSION" \
-    && cd /home/dataiku \
-    && echo "+ Downloading kit" \
-    && curl -OsS "https://cdn.downloads.dataiku.com/public/studio/$DSS_VERSION/$DSSKIT.tar.gz" \
-    && echo "+ Extracting kit" \
-    && tar xf "$DSSKIT.tar.gz" \
-    && rm "$DSSKIT.tar.gz" \
-    && "$DSSKIT"/scripts/install/installdir-postinstall.sh "$DSSKIT" \
-    && (cd "$DSSKIT"/resources/graphics-export && npm install puppeteer@13.7.0 fs) \
-    && chown -Rh dataiku:dataiku "$DSSKIT"
+        python39-devel \
+    && dnf clean all
 
 # Install required R packages
 RUN mkdir -p /usr/local/lib/R/site-library \
@@ -67,10 +54,20 @@ RUN mkdir -p /usr/local/lib/R/site-library \
             '/usr/local/lib/R/site-library', \
             repos='https://cloud.r-project.org')"
 
-# Entry point
 WORKDIR /home/dataiku
 USER dataiku
 
+# Download and extract DSS kit
+RUN DSSKIT="dataiku-dss-$DSS_VERSION" \
+    && echo "+ Downloading kit" \
+    && curl -OsS "https://cdn.downloads.dataiku.com/public/studio/$DSS_VERSION/$DSSKIT.tar.gz" \
+    && echo "+ Extracting kit" \
+    && tar xf "$DSSKIT.tar.gz" \
+    && rm "$DSSKIT.tar.gz" \
+    && "$DSSKIT"/scripts/install/installdir-postinstall.sh "$DSSKIT" \
+    && (cd "$DSSKIT"/resources/graphics-export && npm install puppeteer@23.11.1 fs)
+
+# Entry point
 COPY run.sh /home/dataiku/
 
 EXPOSE $DSS_PORT
