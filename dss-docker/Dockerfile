@@ -1,4 +1,4 @@
-FROM almalinux:8
+FROM almalinux:9
 
 ARG dssVersion
 
@@ -14,20 +14,27 @@ RUN useradd dataiku \
 # System dependencies
 RUN dnf -y install epel-release \
     && dnf -y update \
-    && dnf -y module switch-to nodejs:20 \
-    && dnf -y install --enablerepo=powertools \
-        glibc-langpack-en \
+    && dnf -y module switch-to nodejs:22 \
+    && dnf -y install --enablerepo=crb \
+        diffutils \
         file \
         acl \
+        dejavu-sans-fonts \
+        google-noto-sans-cjk-ttc-fonts \
+        google-noto-serif-cjk-ttc-fonts \
+        google-noto-sans-thai-fonts \
+        google-noto-serif-thai-fonts \
         expat \
+        freetype \
+        fontconfig \
         git \
+        glibc-langpack-en \
         nginx \
         unzip \
         zip \
-        ncurses-compat-libs \
+        procps-ng \
         java-17-openjdk-headless \
-        python39 \
-        freetype \
+        python3 \
         libgfortran \
         libgomp \
         R-core-devel \
@@ -42,7 +49,10 @@ RUN dnf -y install epel-release \
         nss \
         mesa-libgbm \
         libX11-xcb \
-        python39-devel \
+        libreoffice-writer \
+        libreoffice-impress \
+        libreoffice-calc \
+        python3-devel \
     && dnf clean all
 
 # Install required R packages
@@ -65,7 +75,7 @@ RUN DSSKIT="dataiku-dss-$DSS_VERSION" \
     && tar xf "$DSSKIT.tar.gz" \
     && rm "$DSSKIT.tar.gz" \
     && "$DSSKIT"/scripts/install/installdir-postinstall.sh "$DSSKIT" \
-    && (cd "$DSSKIT"/resources/graphics-export && npm install puppeteer@23.11.1 fs)
+    && (cd "$DSSKIT"/resources/graphics-export && npm install puppeteer@24.8.2 fs)
 
 # Entry point
 COPY run.sh /home/dataiku/
